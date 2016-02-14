@@ -14,26 +14,23 @@ public class GameThread extends Thread {
 	private GameState _state;
 	private Paint _paintScore;
 
-	public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler)
-	{
-	_surfaceHolder = surfaceHolder;
-	_paint = new Paint();
-	_paintScore = new Paint();
-	_state = new GameState();
-//	Log.d("GAME_THREAD: ", "Constructor finaliza");
+	public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
+		_surfaceHolder = surfaceHolder;
+		_paint = new Paint();
+		_paintScore = new Paint();
+		_state = new GameState();
 	}
 
 	@Override
 	public void run() {
-	while(true)
-	{
-	Canvas canvas = _surfaceHolder.lockCanvas();
-	if (canvas != null){
-		_state.update();
-		_state.draw(canvas,_paint, _paintScore);
-		_surfaceHolder.unlockCanvasAndPost(canvas);
-	}
-	}
+		while(true) {
+		Canvas canvas = _surfaceHolder.lockCanvas();
+			if (canvas != null) {
+				_state.update();
+				_state.draw(canvas, _paint, _paintScore);
+				_surfaceHolder.unlockCanvasAndPost(canvas);
+			}
+		}
 	}
 
 	public GameState getGameState()
