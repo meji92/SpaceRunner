@@ -2,7 +2,6 @@ package globex.spacerunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GameState implements SensorEventListener{
 
@@ -22,10 +22,11 @@ public class GameState implements SensorEventListener{
 	private int playerRadius = 75;
 	private int x;
 	private int y;
-	final int speed = 5;
+	final int speed = 10;
+	private int initialSquares = 15;
 
-	public Asteroid playerAsteroid;
-	public List<Asteroid> asteroids = new ArrayList<Asteroid>();
+	public Square playerSquare;
+	public List<Square> squares = new ArrayList<Square>();
 	
 
 	public GameState()
@@ -35,11 +36,11 @@ public class GameState implements SensorEventListener{
 		screenHeight = MainActivity.screenHeight;
 		screenWidth = MainActivity.screenWidth;
 		x = ((screenWidth /2) - (playerRadius / 2));
-		y =  screenHeight - 75;
-		playerAsteroid = new Asteroid(x,y,speed,speed,playerRadius);
-		for (int i=0; i < 10; i++){
-			//asteroids.add(new Asteroid((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)Math.random()*10,(int)Math.random()*10,(int)(Math.random()*600)));
-			asteroids.add(new Asteroid((int)(Math.random()*screenWidth),0,(int)Math.random()*10,(int)Math.random()*10,(int)(Math.random()*100)));
+		y =  screenHeight - (int)(playerRadius*1.5);
+		playerSquare = new Square(x,y,speed,speed,playerRadius);
+		for (int i=0; i < initialSquares; i++){
+			//squares.add(new Square((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)Math.random()*10,(int)Math.random()*10,(int)(Math.random()*600)));
+			squares.add(new Square((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)(Math.random()*10),(int)(Math.random()*10)+1,(int)(Math.random()*100)));
 		}
 	}
 	
@@ -75,20 +76,20 @@ public class GameState implements SensorEventListener{
 //		0 |	   _bottomBat	|screenWidth		 ↓
 //											_bottomBatY
 //
-		if((event.values[0] > 1)&&(playerAsteroid.getPos().getX() > 0))//left
+		if((event.values[0] > 1)&&(playerSquare.getPos().getX() > 0))//left
 		{
 			if (event.values[0] > 4.5) { //TOP SPEED!!!!
-				playerAsteroid.setPos(playerAsteroid.getPos().getX() - speed * 2,playerAsteroid.getPos().getY());
+				playerSquare.setPos(playerSquare.getPos().getX() - speed * 2, playerSquare.getPos().getY());
 			} else {
-				playerAsteroid.setPos(playerAsteroid.getPos().getX() - speed,playerAsteroid.getPos().getY());
+				playerSquare.setPos(playerSquare.getPos().getX() - speed, playerSquare.getPos().getY());
 			}
 		}else {
-			if ((event.values[0] < -1) && (playerAsteroid.getPos().getX() + playerRadius < screenWidth)) //right
+			if ((event.values[0] < -1) && (playerSquare.getPos().getX() + playerRadius < screenWidth)) //right
 			{
 				if (event.values[0] < -4.5) {
-					playerAsteroid.setPos(playerAsteroid.getPos().getX() + speed * 2, playerAsteroid.getPos().getY());
+					playerSquare.setPos(playerSquare.getPos().getX() + speed * 2, playerSquare.getPos().getY());
 				} else {
-					playerAsteroid.setPos(playerAsteroid.getPos().getX() + speed, playerAsteroid.getPos().getY());
+					playerSquare.setPos(playerSquare.getPos().getX() + speed, playerSquare.getPos().getY());
 				}
 			}
 		}
@@ -98,7 +99,17 @@ public class GameState implements SensorEventListener{
 
 	//The update method
 	public void update() {
-
+		for (Square a: squares){
+			if (a.getPos().getY()>screenHeight){
+				//a.setPos((int)(Math.random() * screenWidth), 0 - a.getSize());
+				a.reloadSquare((int) (Math.random() * screenWidth), 0 - a.getSize());
+			}else if ((a.getPos().getX()>screenWidth)||(a.getPos().getX()< 0)){
+				a.changeDir();
+				a.update();
+			}else{
+				a.update();
+			}
+		}
 	}
 
 	//the draw method
@@ -106,14 +117,16 @@ public class GameState implements SensorEventListener{
 		//Clear the screen
 		canvas.drawRGB(20, 20, 20);
 		//set the colour
-		paint.setARGB(150, 255, 255, 255);
-		paintScore.setColor(Color.GRAY);
+		paint.setARGB(150, 0, 255, 0);
+		paintScore.setColor(Color.RED);
 		paintScore.setTextSize(screenHeight / 8);
 		paintScore.setAlpha(150);
 
-		canvas.drawRect(new Rect((int)playerAsteroid.getPos().getX(), (int)playerAsteroid.getPos().getY(), (int)playerAsteroid.getPos().getX() + playerRadius, (int)playerAsteroid.getPos().getY() + playerRadius), paint);
+		canvas.drawRect(new Rect((int) playerSquare.getPos().getX(), (int) playerSquare.getPos().getY(), (int) playerSquare.getPos().getX() + playerRadius, (int) playerSquare.getPos().getY() + playerRadius), paint);
 
-		for (Asteroid a:asteroids){
+		paint.setARGB(150, 255, 255, 255);
+
+		for (Square a: squares){
 			canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
 			//Log.d("POSICION: ",a.toString());
 		}

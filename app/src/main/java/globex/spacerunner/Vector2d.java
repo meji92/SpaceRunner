@@ -28,6 +28,19 @@ public class Vector2d {
         this.y = y;
     }
 
+    public void increment (int x, int y){
+        this.x = this.x+x;
+        this.y = this.y+y;
+    }
+
+    public void incrementX (int i){
+        this.x = this.x+i;
+    }
+
+    public void incrementY (int i){
+        this.y = this.y+i;
+    }
+
     public int getX() {
         return x;
     }
