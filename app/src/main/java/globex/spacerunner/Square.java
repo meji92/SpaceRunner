@@ -12,10 +12,10 @@ public class Square {
         this.dir = new Vector2d(dirX, dirY);
     }
 
-    public Square(int x, int y){
+    public Square(){
         this.size = (int)(Math.random()*100);
-        this.pos.set(x,y);
-        this.dir.set((int)(Math.random()*10),(int)(Math.random()*10)+1);
+        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
     public Integer distanceTo (Square a){
@@ -38,9 +38,9 @@ public class Square {
         pos.increment(dir.getX(),dir.getY());
     }
 
-    public void reloadSquare(int x, int y){
+    public void reloadSquare(){
         this.size = (int)(Math.random()*100);
-        this.pos.set(x,y);
+        this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
         this.dir.set((int)(Math.random()*10),(int)(Math.random()*10)+1);
     }
 

@@ -23,7 +23,7 @@ public class GameState implements SensorEventListener{
 	private int x;
 	private int y;
 	final int speed = 10;
-	private int initialSquares = 15;
+	private int initialSquares = 25;
 
 	public Square playerSquare;
 	public List<Square> squares = new ArrayList<Square>();
@@ -39,8 +39,8 @@ public class GameState implements SensorEventListener{
 		y =  screenHeight - (int)(playerRadius*1.5);
 		playerSquare = new Square(x,y,speed,speed,playerRadius);
 		for (int i=0; i < initialSquares; i++){
-			//squares.add(new Square((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)Math.random()*10,(int)Math.random()*10,(int)(Math.random()*600)));
-			squares.add(new Square((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)(Math.random()*10),(int)(Math.random()*10)+1,(int)(Math.random()*100)));
+			//squares.add(new Square((int)(Math.random()*screenWidth),(int)(Math.random()*screenHeight),(int)(Math.random()*10),(int)(Math.random()*10)+1,(int)(Math.random()*100)));
+			squares.add(new Square());
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class GameState implements SensorEventListener{
 		for (Square a: squares){
 			if (a.getPos().getY()>screenHeight){
 				//a.setPos((int)(Math.random() * screenWidth), 0 - a.getSize());
-				a.reloadSquare((int) (Math.random() * screenWidth), 0 - a.getSize());
+				a.reloadSquare();
 			}else if ((a.getPos().getX()>screenWidth)||(a.getPos().getX()< 0)){
 				a.changeDir();
 				a.update();
