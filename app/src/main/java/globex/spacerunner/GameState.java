@@ -12,17 +12,20 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 public class GameState implements SensorEventListener{
 
 	//screen width and height
-	int screenWidth = 540;
-	int screenHeight = 960;
+	private int screenWidth = 540;
+	private int screenHeight = 960;
 	private int playerRadius = 75;
 	private int x;
 	private int y;
-	final int speed = 10;
+	private final int speed = 10;
+	private int moveX = 0;
+	private int moveY = 0;
 	private int initialSquares = 25;
 
 	public Square playerSquare;
@@ -51,32 +54,47 @@ public class GameState implements SensorEventListener{
 //		this.screenHeight = screenHeight;
 //		this.screenWidth = screenWidth;
 //	}
-	
+
+	public void onTouchEvent(MotionEvent e) {
+		float x = e.getX();
+		//float y = e.getY();
+		Log.d(Integer.toString(e.getAction()),Integer.toString(e.getAction()));
+		switch (e.getAction()) {
+			case MotionEvent.ACTION_MOVE:
+				if (x > screenWidth / 2) {
+					moveX = speed;
+				} else {
+					moveX = -speed;
+				}
+				/*if (y > (screenHeight-(screenHeight/3))){
+					moveY = speed;
+				}else{
+					moveY = -speed;
+				}*/
+				break;
+			case MotionEvent.ACTION_DOWN:
+				if (x > screenWidth / 2) {
+					moveX = speed;
+				} else {
+					moveX = -speed;
+				}
+				/*if (y > (screenHeight-(screenHeight/3))){
+					moveY = speed;
+				}else{
+					moveY = -speed;
+				}*/
+				break;
+			case MotionEvent.ACTION_UP:
+				moveX = 0;
+				moveY = 0;
+				break;
+
+		}
+	}
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		//	CHULETA event.values[]:
-//			0 = X
-//			1 = Y
-//			2 = Z
-//		VALORES DE X:
-//			0: 0º
-//			9: 90º
-		
-		
-//		<-------_topBatX------->
-//											_topBatY
-//		0 |     _topBat		|screenWidth        ^
-//		  |					|					 |
-//		  |					|					 |
-//		  |					|					 |
-//		  |					|					 |
-//		  |					|					 |
-//		  |					|					 |
-//		0 |	   _bottomBat	|screenWidth		 ↓
-//											_bottomBatY
-//
-		if((event.values[0] > 1)&&(playerSquare.getPos().getX() > 0))//left
+		/*if((event.values[0] > 1)&&(playerSquare.getPos().getX() > 0))//left
 		{
 			if (event.values[0] > 4.5) { //TOP SPEED!!!!
 				playerSquare.setPos(playerSquare.getPos().getX() - speed * 2, playerSquare.getPos().getY());
@@ -92,13 +110,16 @@ public class GameState implements SensorEventListener{
 					playerSquare.setPos(playerSquare.getPos().getX() + speed, playerSquare.getPos().getY());
 				}
 			}
-		}
-
-		
+		}*/
 	}
 
 	//The update method
 	public void update() {
+		if ((moveX > 0)&&(playerSquare.getPos().getX()<(screenWidth-playerRadius))) {
+			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
+		}else if ((moveX < 0)&&(playerSquare.getPos().getX()>0)){
+			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
+		}
 		for (Square a: squares){
 			if (a.getPos().getY()>screenHeight){
 				//a.setPos((int)(Math.random() * screenWidth), 0 - a.getSize());
@@ -128,10 +149,8 @@ public class GameState implements SensorEventListener{
 
 		for (Square a: squares){
 			canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
-			//Log.d("POSICION: ",a.toString());
 		}
 
-		//DRAW THE... CAMPO DE JUEGO XD
 		canvas.drawRect(new Rect(0, screenHeight - 5, screenWidth, screenHeight), paint);
 		canvas.drawRect(new Rect(0, 0, screenWidth, 5), paint);
 		canvas.drawRect(new Rect(0, 0, 5, screenHeight), paint);

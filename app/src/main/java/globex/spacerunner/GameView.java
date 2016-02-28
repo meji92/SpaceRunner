@@ -3,6 +3,7 @@ package globex.spacerunner;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -21,7 +22,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
         //and instantiate the thread
         _thread = new GameThread(holder, context, new Handler());
-//       Log.d("GAME_VIEW: ", "HA CREADO EL THREAD DE GAMETHREAD");
+
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                _thread.getGameState().onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
    /*@Override
