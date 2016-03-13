@@ -1,9 +1,13 @@
 package globex.spacerunner;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+
 public class Square {
-    private int size;
-    private Vector2d pos;
-    private Vector2d dir;
+    protected int size;
+    protected Vector2d pos;
+    protected Vector2d dir;
 
 
     public Square(int x, int y, int dirX, int dirY, int size){
@@ -23,6 +27,15 @@ public class Square {
     }
 
     public boolean collision (Square a){
+        if (pos.distance(a.getPos())<=(a.getSize()+this.getSize())){
+            Log.d("Pos", a.getPos().toString());
+            Log.d("Pos", pos.toString());
+            Log.d("Pos", Integer.toString(a.getSize()));
+            Log.d("Pos", Integer.toString(this.getSize()));
+            Log.d("Collision", "si");
+        }else{
+            Log.d("No Collision", "no");
+        }
         return (pos.distance(a.getPos())<=(a.getSize()+this.getSize()));
     }
 
@@ -31,7 +44,7 @@ public class Square {
     }
 
     public void update (int x, int y){
-        pos.increment(x+dir.getX(),y+dir.getY());
+        pos.increment(x + dir.getX(), y + dir.getY());
     }
 
     public void update (){
@@ -41,7 +54,7 @@ public class Square {
     public void reloadSquare(){
         this.size = (int)(Math.random()*100);
         this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
-        this.dir.set((int)(Math.random()*10),(int)(Math.random()*10)+1);
+        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 1);
     }
 
     public void updateX (int i){
@@ -83,5 +96,15 @@ public class Square {
 
     public Vector2d getDir() {
         return dir;
+    }
+
+    public ArrayList<Rubish> getRubish(){
+        this.size = 1;
+        ArrayList retArray = new ArrayList<Rubish>();
+        for (int i=0; i<=this.size; i++){
+            retArray.add(new Rubish(this.pos,this.dir.getX()+(i*dir.getX()),this.dir.getY()));
+        }
+
+        return retArray;
     }
 }

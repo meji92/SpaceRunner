@@ -121,14 +121,40 @@ public class GameState implements SensorEventListener{
 			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
 		}
 		for (Square a: squares){
+			//Log.d("Cuadrado iterado",a.toString());
 			if (a.getPos().getY()>screenHeight){
-				//a.setPos((int)(Math.random() * screenWidth), 0 - a.getSize());
-				a.reloadSquare();
+				if (a instanceof Rubish){
+					squares.remove(a);
+				}else{
+					a.reloadSquare();
+				}
 			}else if ((a.getPos().getX()>screenWidth)||(a.getPos().getX()< 0)){
 				a.changeDir();
 				a.update();
+				if (a.collision(playerSquare)){
+					/*ArrayList<Rubish> arrList = a.getRubish();
+					for (Rubish r: arrList){
+						squares.add(r);
+					}
+					Log.d("Agregada rubish","Pues eso");*/
+					//squares.addAll(a.getRubish());
+					if (playerSquare.getSize()<=200) {
+						playerSquare.setSize(playerSquare.getSize() + 1);
+					}
+				}
 			}else{
 				a.update();
+				if (a.collision(playerSquare)){
+					/*ArrayList<Rubish> arrList = a.getRubish();
+					for (Rubish r: arrList){
+						squares.add(r);
+					}
+					Log.d("Agregada rubish","Pues eso");*/
+					//squares.addAll(a.getRubish());
+					if (playerSquare.getSize()<=200) {
+						playerSquare.setSize(playerSquare.getSize() + 1);
+					}
+				}
 			}
 		}
 	}
@@ -143,7 +169,7 @@ public class GameState implements SensorEventListener{
 		paintScore.setTextSize(screenHeight / 8);
 		paintScore.setAlpha(150);
 
-		canvas.drawRect(new Rect((int) playerSquare.getPos().getX(), (int) playerSquare.getPos().getY(), (int) playerSquare.getPos().getX() + playerRadius, (int) playerSquare.getPos().getY() + playerRadius), paint);
+		canvas.drawRect(new Rect((int) playerSquare.getPos().getX(), (int) playerSquare.getPos().getY() - (int)(playerSquare.getSize()*1.5), (int) playerSquare.getPos().getX() + playerSquare.getSize(), (int) playerSquare.getPos().getY() - (int)(playerSquare.getSize()*0.5)), paint);
 
 		paint.setARGB(150, 255, 255, 255);
 
