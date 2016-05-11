@@ -1,8 +1,8 @@
 package globex.spacerunner;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 public class GameState implements SensorEventListener{
 
@@ -26,11 +25,14 @@ public class GameState implements SensorEventListener{
 	private final int speed = 10;
 	private int moveX = 0;
 	private int moveY = 0;
-	private int initialSquares = 25;
+	private int initialSquares = 1;
+	private Iterator<Square> iterator;
+	private Square iteratedSquare;
 
 	public Square playerSquare;
 	public List<Square> squares = new ArrayList<Square>();
-	
+	public List<Square> rubishAux = new ArrayList<Square>();
+
 
 	public GameState()
 	{
@@ -46,19 +48,9 @@ public class GameState implements SensorEventListener{
 			squares.add(new Square());
 		}
 	}
-	
-//	public GameState( int screenHeight,int  screenWidth)
-//	{
-//		Sensor accelerometer = MainActivity.manager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
-//		MainActivity.manager.registerListener(this, accelerometer,SensorManager.SENSOR_DELAY_GAME);
-//		this.screenHeight = screenHeight;
-//		this.screenWidth = screenWidth;
-//	}
 
 	public void onTouchEvent(MotionEvent e) {
 		float x = e.getX();
-		//float y = e.getY();
-		Log.d(Integer.toString(e.getAction()),Integer.toString(e.getAction()));
 		switch (e.getAction()) {
 			case MotionEvent.ACTION_MOVE:
 				if (x > screenWidth / 2) {
@@ -66,11 +58,6 @@ public class GameState implements SensorEventListener{
 				} else {
 					moveX = -speed;
 				}
-				/*if (y > (screenHeight-(screenHeight/3))){
-					moveY = speed;
-				}else{
-					moveY = -speed;
-				}*/
 				break;
 			case MotionEvent.ACTION_DOWN:
 				if (x > screenWidth / 2) {
@@ -78,11 +65,6 @@ public class GameState implements SensorEventListener{
 				} else {
 					moveX = -speed;
 				}
-				/*if (y > (screenHeight-(screenHeight/3))){
-					moveY = speed;
-				}else{
-					moveY = -speed;
-				}*/
 				break;
 			case MotionEvent.ACTION_UP:
 				moveX = 0;
@@ -115,48 +97,44 @@ public class GameState implements SensorEventListener{
 
 	//The update method
 	public void update() {
+		boolean addSquare = false;
 		if ((moveX > 0)&&(playerSquare.getPos().getX()<(screenWidth-playerRadius))) {
 			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
 		}else if ((moveX < 0)&&(playerSquare.getPos().getX()>0)){
 			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
 		}
-		for (Square a: squares){
-			//Log.d("Cuadrado iterado",a.toString());
-			if (a.getPos().getY()>screenHeight){
-				if (a instanceof Rubish){
-					squares.remove(a);
+
+		iterator = squares.iterator();
+		while (iterator.hasNext()){
+			iteratedSquare = iterator.next();
+			if (iteratedSquare.getPos().getY()>screenHeight){
+				if (iteratedSquare instanceof Rubish){
+					iterator.remove();
 				}else{
-					a.reloadSquare();
-				}
-			}else if ((a.getPos().getX()>screenWidth)||(a.getPos().getX()< 0)){
-				a.changeDir();
-				a.update();
-				if (a.collision(playerSquare)){
-					/*ArrayList<Rubish> arrList = a.getRubish();
-					for (Rubish r: arrList){
-						squares.add(r);
-					}
-					Log.d("Agregada rubish","Pues eso");*/
-					//squares.addAll(a.getRubish());
-					if (playerSquare.getSize()<=200) {
-						playerSquare.setSize(playerSquare.getSize() + 1);
-					}
+					iteratedSquare.reloadSquare();
 				}
 			}else{
-				a.update();
-				if (a.collision(playerSquare)){
-					/*ArrayList<Rubish> arrList = a.getRubish();
-					for (Rubish r: arrList){
-						squares.add(r);
-					}
-					Log.d("Agregada rubish","Pues eso");*/
-					//squares.addAll(a.getRubish());
-					if (playerSquare.getSize()<=200) {
+				if ((iteratedSquare.getPos().getX() > screenWidth) || (iteratedSquare.getPos().getX() < 0)) {
+					iteratedSquare.changeDir();
+				}
+				iteratedSquare.update();
+				if (iteratedSquare.collision(playerSquare)) {
+					rubishAux.addAll(iteratedSquare.getRubish());
+					//iteratedSquare.reloadSquare();
+					addSquare = true;
+					/*if (playerSquare.getSize()<=200) {
 						playerSquare.setSize(playerSquare.getSize() + 1);
-					}
+					}*/
 				}
 			}
 		}
+		if (addSquare){
+			squares.addAll(rubishAux);
+			Log.d("squares:",squares.toString());
+		}
+		//squares.addAll(rubishAux);
+		//Log.d("Squares", squares.toString());
+		//rubishAux.clear();
 	}
 
 	//the draw method
@@ -174,7 +152,13 @@ public class GameState implements SensorEventListener{
 		paint.setARGB(150, 255, 255, 255);
 
 		for (Square a: squares){
-			canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
+			if (a instanceof Rubish){
+				paint.setARGB(150, 255, 0, 0);
+				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
+			}else {
+				paint.setARGB(150, 255, 255, 255);
+				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
+			}
 		}
 
 		canvas.drawRect(new Rect(0, screenHeight - 5, screenWidth, screenHeight), paint);

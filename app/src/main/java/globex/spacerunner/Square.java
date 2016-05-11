@@ -1,7 +1,6 @@
 package globex.spacerunner;
 
 import android.util.Log;
-
 import java.util.ArrayList;
 
 public class Square {
@@ -22,19 +21,25 @@ public class Square {
         this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
+    public Square(int size){
+        this.size = size;
+        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
+    }
+
     public Integer distanceTo (Square a){
         return (this.pos.distance(a.getPos()));
     }
 
     public boolean collision (Square a){
         if (pos.distance(a.getPos())<=(a.getSize()+this.getSize())){
-            Log.d("Pos", a.getPos().toString());
+            /*Log.d("Pos", a.getPos().toString());
             Log.d("Pos", pos.toString());
             Log.d("Pos", Integer.toString(a.getSize()));
-            Log.d("Pos", Integer.toString(this.getSize()));
-            Log.d("Collision", "si");
+            Log.d("Pos", Integer.toString(this.getSize()));*/
+            //Log.d("Collision", "si!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }else{
-            Log.d("No Collision", "no");
+            //Log.d("No Collision", "no");
         }
         return (pos.distance(a.getPos())<=(a.getSize()+this.getSize()));
     }
@@ -54,7 +59,7 @@ public class Square {
     public void reloadSquare(){
         this.size = (int)(Math.random()*100);
         this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
-        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 1);
+        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) - 1);
     }
 
     public void updateX (int i){
@@ -67,7 +72,7 @@ public class Square {
 
     @Override
     public String toString() {
-        return ("Pos("+Integer.toString(pos.getX())+","+Integer.toString(pos.getY())+");Dir("+Integer.toString(dir.getX())+","+Integer.toString(dir.getY())+")");
+        return ("Square?: "+Boolean.toString(this instanceof Square)+" Rubish?: "+Boolean.toString(this instanceof Rubish)+" Pos("+Integer.toString(pos.getX())+","+Integer.toString(pos.getY())+");Dir("+Integer.toString(dir.getX())+","+Integer.toString(dir.getY())+")");
     }
 
     public void setSize(int size) {
@@ -99,11 +104,13 @@ public class Square {
     }
 
     public ArrayList<Rubish> getRubish(){
-        this.size = 1;
         ArrayList retArray = new ArrayList<Rubish>();
-        for (int i=0; i<=this.size; i++){
-            retArray.add(new Rubish(this.pos,this.dir.getX()+(i*dir.getX()),this.dir.getY()));
+        for (int i=0; i<=this.size/10; i++){
+            retArray.add(new Rubish());
+            //retArray.add(new Rubish(this.pos,this.dir.getX()+(i*dir.getX()),this.dir.getY()));
+            //retArray.add(new Square());
         }
+        this.reloadSquare();
 
         return retArray;
     }

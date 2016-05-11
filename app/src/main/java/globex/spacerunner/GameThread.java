@@ -4,38 +4,51 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameThread extends Thread {
 
-	/** Handle to the surface manager object we interact with */
-	private SurfaceHolder _surfaceHolder;
-	private Paint _paint;
-	private GameState _state;
-	private Paint _paintScore;
+	private SurfaceHolder surfaceHolder;
+	private Paint paint;
+	private GameState state;
+	private Paint paintScore;
+	private long lastFrameMillis;
+	private long thisFrameMillis;
+	private int delta;
+	private int fps = 1000/60;
+	private Canvas canvas;
 
 	public GameThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
-		_surfaceHolder = surfaceHolder;
-		_paint = new Paint();
-		_paintScore = new Paint();
-		_state = new GameState();
+		this.surfaceHolder = surfaceHolder;
+		paint = new Paint();
+		paintScore = new Paint();
+		state = new GameState();
+		lastFrameMillis = 0;
+		thisFrameMillis = 0;
 	}
 
 	@Override
 	public void run() {
+		lastFrameMillis = System.currentTimeMillis();
 		while(true) {
-		Canvas canvas = _surfaceHolder.lockCanvas();
-			if (canvas != null) {
-				_state.update();
-				_state.draw(canvas, _paint, _paintScore);
-				_surfaceHolder.unlockCanvasAndPost(canvas);
+			thisFrameMillis = System.currentTimeMillis();
+			delta = (int)(thisFrameMillis - lastFrameMillis);
+			if (delta >= fps){
+				canvas = surfaceHolder.lockCanvas();
+				if (canvas != null) {
+					lastFrameMillis = thisFrameMillis;
+					state.update();
+					state.draw(canvas, paint, paintScore);
+				}
+				surfaceHolder.unlockCanvasAndPost(canvas);
 			}
 		}
 	}
 
 	public GameState getGameState()
 	{
-	return _state;
+	return state;
 	}
 	
 	}
