@@ -23,7 +23,7 @@ public class Square {
 
     public Square(int size){
         this.size = size;
-        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
         this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
@@ -45,7 +45,7 @@ public class Square {
     }
 
     public void changeDir (){
-        dir.set(dir.getX()*(-1), dir.getY());
+        dir.set(dir.getX() * (-1), dir.getY());
     }
 
     public void update (int x, int y){
@@ -53,13 +53,13 @@ public class Square {
     }
 
     public void update (){
-        pos.increment(dir.getX(),dir.getY());
+        pos.increment(dir.getX(), dir.getY());
     }
 
     public void reloadSquare(){
         this.size = (int)(Math.random()*100);
-        this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
-        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) - 1);
+        this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
+        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 2);
     }
 
     public void updateX (int i){
@@ -72,7 +72,7 @@ public class Square {
 
     @Override
     public String toString() {
-        return ("Square?: "+Boolean.toString(this instanceof Square)+" Rubish?: "+Boolean.toString(this instanceof Rubish)+" Pos("+Integer.toString(pos.getX())+","+Integer.toString(pos.getY())+");Dir("+Integer.toString(dir.getX())+","+Integer.toString(dir.getY())+")");
+        return ("Pos("+Integer.toString(pos.getX())+","+Integer.toString(pos.getY())+");Dir("+Integer.toString(dir.getX())+","+Integer.toString(dir.getY())+")"+" Rubish?: "+Boolean.toString(this instanceof Rubish));
     }
 
     public void setSize(int size) {
@@ -99,15 +99,24 @@ public class Square {
         return pos;
     }
 
-    public Vector2d getDir() {
-        return dir;
+    public Vector2d getDir() {return dir; }
+
+    public Vector2d getPosValue() {
+        Vector2d retValue = new Vector2d(pos.getX(), pos.getY());
+        return retValue;
+    }
+
+    public Vector2d getDirValue() {
+        Vector2d retValue = new Vector2d(dir.getX(), dir.getY());
+        return retValue;
     }
 
     public ArrayList<Rubish> getRubish(){
         ArrayList retArray = new ArrayList<Rubish>();
         for (int i=0; i<=this.size/10; i++){
-            retArray.add(new Rubish());
-            //retArray.add(new Rubish(this.pos,this.dir.getX()+(i*dir.getX()),this.dir.getY()));
+            //retArray.add(new Rubish());
+            retArray.add(new Rubish(this.getPosValue(),this.getDirValue().getX()+i,this.getDirValue().getY()));
+            //retArray.add(new Rubish(this.pos,this.dir.getX(),this.dir.getY()));
             //retArray.add(new Square());
         }
         this.reloadSquare();

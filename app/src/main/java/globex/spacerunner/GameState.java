@@ -25,7 +25,7 @@ public class GameState implements SensorEventListener{
 	private final int speed = 10;
 	private int moveX = 0;
 	private int moveY = 0;
-	private int initialSquares = 1;
+	private int initialSquares = 20;
 	private Iterator<Square> iterator;
 	private Square iteratedSquare;
 
@@ -120,6 +120,7 @@ public class GameState implements SensorEventListener{
 				iteratedSquare.update();
 				if (iteratedSquare.collision(playerSquare)) {
 					rubishAux.addAll(iteratedSquare.getRubish());
+					//rubishAux.add(new Rubish());
 					//iteratedSquare.reloadSquare();
 					addSquare = true;
 					/*if (playerSquare.getSize()<=200) {
@@ -130,6 +131,7 @@ public class GameState implements SensorEventListener{
 		}
 		if (addSquare){
 			squares.addAll(rubishAux);
+			rubishAux.clear();
 			Log.d("squares:",squares.toString());
 		}
 		//squares.addAll(rubishAux);
@@ -155,7 +157,7 @@ public class GameState implements SensorEventListener{
 			if (a instanceof Rubish){
 				paint.setARGB(150, 255, 0, 0);
 				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
-			}else {
+			} else {
 				paint.setARGB(150, 255, 255, 255);
 				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
 			}
