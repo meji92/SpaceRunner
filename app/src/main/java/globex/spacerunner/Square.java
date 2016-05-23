@@ -1,6 +1,5 @@
 package globex.spacerunner;
 
-import android.util.Log;
 import java.util.ArrayList;
 
 public class Square {
@@ -49,11 +48,11 @@ public class Square {
     }
 
     public void update (int x, int y){
-        pos.increment(x + dir.getX(), y + dir.getY());
+        pos.add(x + dir.getX(), y + dir.getY());
     }
 
     public void update (){
-        pos.increment(dir.getX(), dir.getY());
+        pos.add(dir.getX(), dir.getY());
     }
 
     public void reloadSquare(){
@@ -111,16 +110,12 @@ public class Square {
         return retValue;
     }
 
-    public ArrayList<Rubish> getRubish(){
+    public ArrayList<Rubish> getRubishAndReload(){
         ArrayList retArray = new ArrayList<Rubish>();
         for (int i=0; i<=this.size/10; i++){
-            //retArray.add(new Rubish());
-            retArray.add(new Rubish(this.getPosValue(),this.getDirValue().getX()+i,this.getDirValue().getY()));
-            //retArray.add(new Rubish(this.pos,this.dir.getX(),this.dir.getY()));
-            //retArray.add(new Square());
+            retArray.add(new Rubish(this.getPosValue(),(int)(10-(Math.random()*20)),(int)(Math.random()*10)+2));
         }
         this.reloadSquare();
-
         return retArray;
     }
 }

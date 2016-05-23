@@ -119,24 +119,15 @@ public class GameState implements SensorEventListener{
 				}
 				iteratedSquare.update();
 				if (iteratedSquare.collision(playerSquare)) {
-					rubishAux.addAll(iteratedSquare.getRubish());
-					//rubishAux.add(new Rubish());
-					//iteratedSquare.reloadSquare();
+					rubishAux.addAll(iteratedSquare.getRubishAndReload());
 					addSquare = true;
-					/*if (playerSquare.getSize()<=200) {
-						playerSquare.setSize(playerSquare.getSize() + 1);
-					}*/
 				}
 			}
 		}
 		if (addSquare){
 			squares.addAll(rubishAux);
 			rubishAux.clear();
-			Log.d("squares:",squares.toString());
 		}
-		//squares.addAll(rubishAux);
-		//Log.d("Squares", squares.toString());
-		//rubishAux.clear();
 	}
 
 	//the draw method
@@ -149,18 +140,13 @@ public class GameState implements SensorEventListener{
 		paintScore.setTextSize(screenHeight / 8);
 		paintScore.setAlpha(150);
 
-		canvas.drawRect(new Rect((int) playerSquare.getPos().getX(), (int) playerSquare.getPos().getY() - (int)(playerSquare.getSize()*1.5), (int) playerSquare.getPos().getX() + playerSquare.getSize(), (int) playerSquare.getPos().getY() - (int)(playerSquare.getSize()*0.5)), paint);
+		canvas.drawRect(new Rect(playerSquare.getPos().getX(), playerSquare.getPos().getY() - (int)(playerSquare.getSize()*1.5), playerSquare.getPos().getX() + playerSquare.getSize(), playerSquare.getPos().getY() - (int)(playerSquare.getSize()*0.5)), paint);
 
 		paint.setARGB(150, 255, 255, 255);
 
 		for (Square a: squares){
-			if (a instanceof Rubish){
-				paint.setARGB(150, 255, 0, 0);
-				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
-			} else {
-				paint.setARGB(150, 255, 255, 255);
-				canvas.drawRect(new Rect((int) a.getPos().getX(), (int) a.getPos().getY(), (int) (a.getPos().getX() + a.getSize()), (int) (a.getPos().getY() + a.getSize())), paint);
-			}
+			paint.setARGB(150, 255, 255, 255);
+			canvas.drawRect(new Rect(a.getPos().getX(), a.getPos().getY(), a.getPos().getX() + a.getSize(), a.getPos().getY() + a.getSize()), paint);
 		}
 
 		canvas.drawRect(new Rect(0, screenHeight - 5, screenWidth, screenHeight), paint);

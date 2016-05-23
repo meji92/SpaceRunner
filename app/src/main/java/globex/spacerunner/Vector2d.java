@@ -28,9 +28,16 @@ public class Vector2d {
         this.y = y;
     }
 
-    public void increment (int x, int y){
+    public Vector2d add(int x, int y){
         this.x = this.x+x;
         this.y = this.y+y;
+        return new Vector2d(this.x, this.y);
+    }
+
+    public Vector2d add(Vector2d other) {
+        this.x += other.x;
+        this.y += other.y;
+        return new Vector2d(this.x, this.y);
     }
 
     public void incrementX (int i){
@@ -57,13 +64,7 @@ public class Vector2d {
         this.y = y;
     }
 
-    public Vector2d add(Vector2d other) {
-        int x = this.x + other.x;
-        int y = this.y + other.y;
-        return new Vector2d(x, y);
-    }
-
-    public Vector2d subtract(Vector2d other) {
+    public Vector2d sub(Vector2d other) {
         int x = this.x - other.x;
         int y = this.y - other.y;
         return new Vector2d(x, y);
