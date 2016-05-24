@@ -11,7 +11,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class GameState implements SensorEventListener{
@@ -76,20 +75,20 @@ public class GameState implements SensorEventListener{
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		/*if((event.values[0] > 1)&&(playerSquare.getPos().getX() > 0))//left
+		/*if((event.values[0] > 1)&&(playerSquare.getPosition().getX() > 0))//left
 		{
 			if (event.values[0] > 4.5) { //TOP SPEED!!!!
-				playerSquare.setPos(playerSquare.getPos().getX() - speed * 2, playerSquare.getPos().getY());
+				playerSquare.setPosition(playerSquare.getPosition().getX() - speed * 2, playerSquare.getPosition().getY());
 			} else {
-				playerSquare.setPos(playerSquare.getPos().getX() - speed, playerSquare.getPos().getY());
+				playerSquare.setPosition(playerSquare.getPosition().getX() - speed, playerSquare.getPosition().getY());
 			}
 		}else {
-			if ((event.values[0] < -1) && (playerSquare.getPos().getX() + playerRadius < screenWidth)) //right
+			if ((event.values[0] < -1) && (playerSquare.getPosition().getX() + playerRadius < screenWidth)) //right
 			{
 				if (event.values[0] < -4.5) {
-					playerSquare.setPos(playerSquare.getPos().getX() + speed * 2, playerSquare.getPos().getY());
+					playerSquare.setPosition(playerSquare.getPosition().getX() + speed * 2, playerSquare.getPosition().getY());
 				} else {
-					playerSquare.setPos(playerSquare.getPos().getX() + speed, playerSquare.getPos().getY());
+					playerSquare.setPosition(playerSquare.getPosition().getX() + speed, playerSquare.getPosition().getY());
 				}
 			}
 		}*/
@@ -98,23 +97,23 @@ public class GameState implements SensorEventListener{
 	//The update method
 	public void update() {
 		boolean addSquare = false;
-		if ((moveX > 0)&&(playerSquare.getPos().getX()<(screenWidth-playerRadius))) {
-			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
-		}else if ((moveX < 0)&&(playerSquare.getPos().getX()>0)){
-			playerSquare.setPos(playerSquare.getPos().getX() + moveX, playerSquare.getPos().getY() + moveY);
+		if ((moveX > 0)&&(playerSquare.getPosition().getX()<(screenWidth-playerRadius))) {
+			playerSquare.setPosition(playerSquare.getPosition().getX() + moveX, playerSquare.getPosition().getY() + moveY);
+		}else if ((moveX < 0)&&(playerSquare.getPosition().getX()>0)){
+			playerSquare.setPosition(playerSquare.getPosition().getX() + moveX, playerSquare.getPosition().getY() + moveY);
 		}
 
 		iterator = squares.iterator();
 		while (iterator.hasNext()){
 			iteratedSquare = iterator.next();
-			if (iteratedSquare.getPos().getY()>screenHeight){
+			if (iteratedSquare.getPosition().getY()>screenHeight){
 				if (iteratedSquare instanceof Rubish){
 					iterator.remove();
 				}else{
 					iteratedSquare.reloadSquare();
 				}
 			}else{
-				if ((iteratedSquare.getPos().getX() > screenWidth) || (iteratedSquare.getPos().getX() < 0)) {
+				if ((iteratedSquare.getPosition().getX() > screenWidth) || (iteratedSquare.getPosition().getX() < 0)) {
 					iteratedSquare.changeDir();
 				}
 				iteratedSquare.update();
@@ -134,19 +133,23 @@ public class GameState implements SensorEventListener{
 	public void draw(Canvas canvas, Paint paint, Paint paintScore) {
 		//Clear the screen
 		canvas.drawRGB(20, 20, 20);
-		//set the colour
+		//Set color
 		paint.setARGB(150, 0, 255, 0);
 		paintScore.setColor(Color.RED);
 		paintScore.setTextSize(screenHeight / 8);
 		paintScore.setAlpha(150);
 
-		canvas.drawRect(new Rect(playerSquare.getPos().getX(), playerSquare.getPos().getY() - (int)(playerSquare.getSize()*1.5), playerSquare.getPos().getX() + playerSquare.getSize(), playerSquare.getPos().getY() - (int)(playerSquare.getSize()*0.5)), paint);
-
-		paint.setARGB(150, 255, 255, 255);
+		canvas.drawRect(new Rect(playerSquare.getPosition().getX(), playerSquare.getPosition().getY(), playerSquare.getPosition().getX() + playerSquare.getSize(), playerSquare.getPosition().getY() + playerSquare.getSize()), paint);
+		//Draw centers
+		/*paint.setARGB(150, 0, 0, 255);
+		canvas.drawRect(new Rect(playerSquare.getCenter().getX() - 5, playerSquare.getCenter().getY() - 5, playerSquare.getCenter().getX() + 5, playerSquare.getCenter().getY() + 5), paint);*/
 
 		for (Square a: squares){
 			paint.setARGB(150, 255, 255, 255);
-			canvas.drawRect(new Rect(a.getPos().getX(), a.getPos().getY(), a.getPos().getX() + a.getSize(), a.getPos().getY() + a.getSize()), paint);
+			canvas.drawRect(new Rect(a.getPosition().getX(), a.getPosition().getY(), a.getPosition().getX() + a.getSize(), a.getPosition().getY() + a.getSize()), paint);
+			//Draw centers
+			/*paint.setARGB(150, 0, 0, 255);
+			canvas.drawRect(new Rect(a.getCenter().getX()-5, a.getCenter().getY()-5, a.getCenter().getX()+5, a.getCenter().getY()+5), paint);*/
 		}
 
 		canvas.drawRect(new Rect(0, screenHeight - 5, screenWidth, screenHeight), paint);

@@ -1,119 +1,130 @@
 package globex.spacerunner;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Square {
     protected int size;
-    protected Vector2d pos;
-    protected Vector2d dir;
+    protected Vector2d position;
+    protected Vector2d direction;
+    protected Vector2d center;
 
 
     public Square(int x, int y, int dirX, int dirY, int size){
         this.size = size;
-        this.pos = new Vector2d(x,y);
-        this.dir = new Vector2d(dirX, dirY);
+        this.position = new Vector2d(x,y);
+        this.center = new Vector2d(x+size/2,y+size/2);
+        this.direction = new Vector2d(dirX, dirY);
     }
 
     public Square(){
         this.size = (int)(Math.random()*100);
-        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
-        this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
+        this.position = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.center = new Vector2d(position.getX()+size/2,position.getY()+size/2);
+        this.direction = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
     public Square(int size){
         this.size = size;
-        this.pos = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
-        this.dir = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
+        this.position = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
+        this.center = new Vector2d(position.getX()+size/2,position.getY()+size/2);
+        this.direction = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
     public Integer distanceTo (Square a){
-        return (this.pos.distance(a.getPos()));
+        return (this.position.distance(a.getPosition()));
     }
 
     public boolean collision (Square a){
-        if (pos.distance(a.getPos())<=(a.getSize()+this.getSize())){
-            /*Log.d("Pos", a.getPos().toString());
-            Log.d("Pos", pos.toString());
-            Log.d("Pos", Integer.toString(a.getSize()));
-            Log.d("Pos", Integer.toString(this.getSize()));*/
-            //Log.d("Collision", "si!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }else{
-            //Log.d("No Collision", "no");
-        }
-        return (pos.distance(a.getPos())<=(a.getSize()+this.getSize()));
+        return (center.distance(a.getCenter())<(size/2+a.getSize()/2));
+        //return ((Math.abs(center.getX()-a.getCenter().getX())<(size/2+a.getSize()/2))&&(Math.abs(center.getY()-a.getCenter().getY())<(size/2+a.getSize()/2)));
+        //return (position.distance(a.getPosition())<=(a.getSize()+this.getSize()));
     }
 
     public void changeDir (){
-        dir.set(dir.getX() * (-1), dir.getY());
+        direction.set(direction.getX() * (-1), direction.getY());
     }
 
     public void update (int x, int y){
-        pos.add(x + dir.getX(), y + dir.getY());
+        position.add(x + direction.getX(), y + direction.getY());
+        center.set(position.getX() + size / 2, position.getY() + size / 2);
     }
 
     public void update (){
-        pos.add(dir.getX(), dir.getY());
+        position.add(direction.getX(), direction.getY());
+        center.set(position.getX() + size / 2, position.getY() + size / 2);
     }
 
     public void reloadSquare(){
         this.size = (int)(Math.random()*100);
-        this.pos.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
-        this.dir.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 2);
+        this.position.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size + (int) (Math.random() * (MainActivity.screenHeight / 4))));
+        this.direction.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 2);
     }
 
     public void updateX (int i){
-        pos.incrementX(i);
+        position.incrementX(i);
     }
 
     public void updateY (int i){
-        pos.incrementY(i);
+        position.incrementY(i);
     }
 
     @Override
     public String toString() {
-        return ("Pos("+Integer.toString(pos.getX())+","+Integer.toString(pos.getY())+");Dir("+Integer.toString(dir.getX())+","+Integer.toString(dir.getY())+")"+" Rubish?: "+Boolean.toString(this instanceof Rubish));
+        return ("Pos("+Integer.toString(position.getX())+","+Integer.toString(position.getY())+");Dir("+Integer.toString(direction.getX())+","+Integer.toString(direction.getY())+")"+" Rubish?: "+Boolean.toString(this instanceof Rubish));
     }
 
     public void setSize(int size) {
         this.size = size;
     }
 
-    public void setPos(Vector2d pos) {
-        this.pos = pos;
+    public void setPosition(Vector2d position) {
+        this.position = position;
     }
 
-    public void setPos(int posX, int posY) {
-        this.pos.set(posX, posY);
+    public void setPosition(int posX, int posY) {
+        this.position.set(posX, posY);
+        center.set(position.getX()+size/2,position.getY()+size/2);
     }
 
-    public void setDir(Vector2d dir) {
-        this.dir = dir;
+    public void setDirection(Vector2d direction) {
+        this.direction = direction;
+    }
+
+    public Vector2d getCenter() {
+        return center;
+    }
+
+    public void setCenter(Vector2d center) {
+        this.center = center;
     }
 
     public int getSize() {
         return size;
     }
 
-    public Vector2d getPos() {
-        return pos;
+    public Vector2d getPosition() {
+        return position;
     }
 
-    public Vector2d getDir() {return dir; }
+    public Vector2d getDirection() {return direction; }
 
     public Vector2d getPosValue() {
-        Vector2d retValue = new Vector2d(pos.getX(), pos.getY());
+        Vector2d retValue = new Vector2d(position.getX(), position.getY());
         return retValue;
     }
 
     public Vector2d getDirValue() {
-        Vector2d retValue = new Vector2d(dir.getX(), dir.getY());
+        Vector2d retValue = new Vector2d(direction.getX(), direction.getY());
         return retValue;
     }
 
     public ArrayList<Rubish> getRubishAndReload(){
         ArrayList retArray = new ArrayList<Rubish>();
+        this.position.setY(this.position.getY()+this.size/2+10);
         for (int i=0; i<=this.size/10; i++){
-            retArray.add(new Rubish(this.getPosValue(),(int)(10-(Math.random()*20)),(int)(Math.random()*10)+2));
+            retArray.add(new Rubish(this.getPosValue(),this.direction.getX()+i,(int)(Math.random()*10)+2));
         }
         this.reloadSquare();
         return retArray;

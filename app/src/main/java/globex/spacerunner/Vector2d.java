@@ -97,4 +97,9 @@ public class Vector2d {
         y = y / magnitude;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Vector2d("+Integer.toString(this.x)+"," +Integer.toString(this.y)+")";
+    }
 }
