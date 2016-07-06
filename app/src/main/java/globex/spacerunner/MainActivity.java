@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public static SensorManager manager;
     public static int screenWidth;
     public static int screenHeight;
+    public static int normalizedWidth = 1080;
+    public static int normalizedHeight = 1920;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

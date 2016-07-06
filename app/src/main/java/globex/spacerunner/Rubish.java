@@ -13,7 +13,7 @@ public class Rubish extends Square {
 
     public Rubish(){
         this.size = 10;
-        this.position = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.position = new Vector2d((int) (Math.random() * MainActivity.normalizedWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.normalizedHeight/2))));
         this.direction = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
         this.center = new Vector2d(position.getX()+size/2,position.getY()+size/2);
     }

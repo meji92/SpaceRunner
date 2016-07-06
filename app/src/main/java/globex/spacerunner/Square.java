@@ -20,14 +20,14 @@ public class Square {
 
     public Square(){
         this.size = (int)(Math.random()*100);
-        this.position = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/2))));
+        this.position = new Vector2d((int) (Math.random() * MainActivity.normalizedWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.normalizedHeight/2))));
         this.center = new Vector2d(position.getX()+size/2,position.getY()+size/2);
         this.direction = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
 
     public Square(int size){
         this.size = size;
-        this.position = new Vector2d((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.screenHeight/4))));
+        this.position = new Vector2d((int) (Math.random() * MainActivity.normalizedWidth), 0 - (this.size+(int)(Math.random()*(MainActivity.normalizedHeight/4))));
         this.center = new Vector2d(position.getX()+size/2,position.getY()+size/2);
         this.direction = new Vector2d((int)(Math.random()*10),(int)(Math.random()*10)+2);
     }
@@ -58,7 +58,7 @@ public class Square {
 
     public void reloadSquare(){
         this.size = (int)(Math.random()*100);
-        this.position.set((int) (Math.random() * MainActivity.screenWidth), 0 - (this.size + (int) (Math.random() * (MainActivity.screenHeight / 4))));
+        this.position.set((int) (Math.random() * MainActivity.normalizedWidth), 0 - (this.size + (int) (Math.random() * (MainActivity.normalizedHeight / 4))));
         this.direction.set((int) (Math.random() * 10), (int) (Math.random() * 10) + 2);
     }
 
