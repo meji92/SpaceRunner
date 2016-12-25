@@ -34,7 +34,7 @@ public class GameState implements SensorEventListener{
 
 	public Square playerSquare;
 	public List<Square> squares = new ArrayList<Square>();
-	public List<Square> rubishAux = new ArrayList<Square>();
+	public List<Square> rubbishAux = new ArrayList<Square>();
 
 
 	public GameState()
@@ -103,7 +103,7 @@ public class GameState implements SensorEventListener{
 	//The update method
 	public void update() {
 		boolean addSquare = false;
-		if ((moveX > 0)&&(playerSquare.getPosition().getX()<(normalizedHeight-playerRadius))) {
+		if ((moveX > 0)&&(playerSquare.getPosition().getX()<(normalizedWidth-playerRadius))) {
 			playerSquare.setPosition(playerSquare.getPosition().getX() + moveX, playerSquare.getPosition().getY() + moveY);
 		}else if ((moveX < 0)&&(playerSquare.getPosition().getX()>0)){
 			playerSquare.setPosition(playerSquare.getPosition().getX() + moveX, playerSquare.getPosition().getY() + moveY);
@@ -113,7 +113,7 @@ public class GameState implements SensorEventListener{
 		while (iterator.hasNext()){
 			iteratedSquare = iterator.next();
 			if (iteratedSquare.getPosition().getY()>normalizedHeight){
-				if (iteratedSquare instanceof Rubish){
+				if (iteratedSquare instanceof Rubbish){
 					iterator.remove();
 				}else{
 					iteratedSquare.reloadSquare();
@@ -124,14 +124,14 @@ public class GameState implements SensorEventListener{
 				}
 				iteratedSquare.update();
 				if (iteratedSquare.collision(playerSquare)) {
-					rubishAux.addAll(iteratedSquare.getRubishAndReload());
+					rubbishAux.addAll(iteratedSquare.getRubbishAndReload());
 					addSquare = true;
 				}
 			}
 		}
 		if (addSquare){
-			squares.addAll(rubishAux);
-			rubishAux.clear();
+			squares.addAll(rubbishAux);
+			rubbishAux.clear();
 		}
 	}
 

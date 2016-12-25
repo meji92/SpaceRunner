@@ -1,7 +1,5 @@
 package globex.spacerunner;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 public class Square {
@@ -72,7 +70,7 @@ public class Square {
 
     @Override
     public String toString() {
-        return ("Pos("+Integer.toString(position.getX())+","+Integer.toString(position.getY())+");Dir("+Integer.toString(direction.getX())+","+Integer.toString(direction.getY())+")"+" Rubish?: "+Boolean.toString(this instanceof Rubish));
+        return ("Pos("+Integer.toString(position.getX())+","+Integer.toString(position.getY())+");Dir("+Integer.toString(direction.getX())+","+Integer.toString(direction.getY())+")"+" Rubbish?: "+Boolean.toString(this instanceof Rubbish));
     }
 
     public void setSize(int size) {
@@ -120,11 +118,11 @@ public class Square {
         return retValue;
     }
 
-    public ArrayList<Rubish> getRubishAndReload(){
-        ArrayList retArray = new ArrayList<Rubish>();
+    public ArrayList<Rubbish> getRubbishAndReload(){
+        ArrayList retArray = new ArrayList<Rubbish>();
         this.position.setY(this.position.getY()+this.size/2+10);
         for (int i=0; i<=this.size/10; i++){
-            retArray.add(new Rubish(this.getPosValue(),this.direction.getX()+i,(int)(Math.random()*10)+2));
+            retArray.add(new Rubbish(this.getPosValue(),this.direction.getX()+i,(int)(Math.random()*10)+2));
         }
         this.reloadSquare();
         return retArray;
