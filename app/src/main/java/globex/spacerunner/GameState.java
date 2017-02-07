@@ -31,6 +31,7 @@ public class GameState implements SensorEventListener{
 	private Iterator<Square> iterator;
 	private Square iteratedSquare;
 	private Rect auxRect = new Rect(0,0,0,0);
+	private Score score = new Score();
 
 	public Square playerSquare;
 	public List<Square> squares = new ArrayList<Square>();
@@ -43,8 +44,6 @@ public class GameState implements SensorEventListener{
 		MainActivity.manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
 		screenHeight = MainActivity.screenHeight;
 		screenWidth = MainActivity.screenWidth;
-		Log.d("screenHeight", Integer.toString(screenHeight));
-		Log.d("screenWidth", Integer.toString(screenWidth));
 		x = ((normalizedWidth /2) - (playerRadius / 2));
 		y =  normalizedHeight - (int)(playerRadius*1.5);
 		playerSquare = new Square(x,y,speed,speed,playerRadius);
@@ -116,6 +115,7 @@ public class GameState implements SensorEventListener{
 				if (iteratedSquare instanceof Rubbish){
 					iterator.remove();
 				}else{
+					score.addScore(iteratedSquare.getSize());
 					iteratedSquare.reloadSquare();
 				}
 			}else{
@@ -141,9 +141,9 @@ public class GameState implements SensorEventListener{
 		canvas.drawRGB(20, 20, 20);
 		//Set color
 		paint.setARGB(150, 0, 255, 0);
-		paintScore.setColor(Color.RED);
-		paintScore.setTextSize(normalizedHeight / 8);
-		paintScore.setAlpha(150);
+
+		paintScore.setTextSize(normalizedHeight / 20);
+		canvas.drawText(score.getScoreString(),normalizedWidth / 25,normalizedHeight / 20,paintScore);
 
 		canvas.drawRect(getNormalizedRect(playerSquare.getPosition().getX(), playerSquare.getPosition().getY(), playerSquare.getPosition().getX() + playerSquare.getSize(), playerSquare.getPosition().getY() + playerSquare.getSize()), paint);
 		//Draw centers
@@ -178,4 +178,4 @@ public class GameState implements SensorEventListener{
 		// TODO Auto-generated method stub
 		
 	}
-	}
+}

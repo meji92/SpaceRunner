@@ -1,6 +1,5 @@
 package globex.spacerunner;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +7,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public static SensorManager manager;
@@ -35,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button start = (Button)findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 setContentView(R.layout.game_thread);
@@ -44,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
-
         super.onWindowFocusChanged(hasFocus);
 
         if(hasFocus) {

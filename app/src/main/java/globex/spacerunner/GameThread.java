@@ -31,6 +31,7 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		lastFrameMillis = System.currentTimeMillis();
+		paintScore.setARGB(150, 0, 255, 0);
 		while(true) {
 			thisFrameMillis = System.currentTimeMillis();
 			delta = (int)(thisFrameMillis - lastFrameMillis);
@@ -40,8 +41,8 @@ public class GameThread extends Thread {
 					lastFrameMillis = thisFrameMillis;
 					state.update();
 					state.draw(canvas, paint, paintScore);
+					surfaceHolder.unlockCanvasAndPost(canvas);
 				}
-				surfaceHolder.unlockCanvasAndPost(canvas);
 			}
 		}
 	}
@@ -50,5 +51,4 @@ public class GameThread extends Thread {
 	{
 	return state;
 	}
-	
-	}
+}
