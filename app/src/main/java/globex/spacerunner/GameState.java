@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.hardware.Sensor;
@@ -100,7 +99,7 @@ public class GameState implements SensorEventListener{
 	}
 
 	//The update method
-	public void update() {
+	public boolean update() {
 		boolean addSquare = false;
 		if ((moveX > 0)&&(playerSquare.getPosition().getX()<(normalizedWidth-playerRadius))) {
 			playerSquare.setPosition(playerSquare.getPosition().getX() + moveX, playerSquare.getPosition().getY() + moveY);
@@ -123,7 +122,11 @@ public class GameState implements SensorEventListener{
 					iteratedSquare.changeDir();
 				}
 				iteratedSquare.update();
-				if (iteratedSquare.collision(playerSquare)) {
+				if (iteratedSquare.isCollision(playerSquare)) {
+					playerSquare.collision(iteratedSquare);
+					if (playerSquare.getSize()<=0){
+						return true;
+					}
 					rubbishAux.addAll(iteratedSquare.getRubbishAndReload());
 					addSquare = true;
 				}
@@ -133,6 +136,7 @@ public class GameState implements SensorEventListener{
 			squares.addAll(rubbishAux);
 			rubbishAux.clear();
 		}
+		return false;
 	}
 
 	//the draw method
@@ -158,14 +162,20 @@ public class GameState implements SensorEventListener{
 			canvas.drawRect(new Rect(a.getCenter().getX()-5, a.getCenter().getY()-5, a.getCenter().getX()+5, a.getCenter().getY()+5), paint);*/
 		}
 
-		auxRect.set(0, screenHeight - 5, screenWidth, screenHeight);
+		/*auxRect.set(0, screenHeight - 5, screenWidth, screenHeight);
 		canvas.drawRect(auxRect, paint);
 		auxRect.set(0, 0, screenWidth, 5);
 		canvas.drawRect(auxRect, paint);
 		auxRect.set(0, 0, 5, screenHeight);
 		canvas.drawRect(auxRect, paint);
 		auxRect.set(screenWidth, 0, screenWidth - 5, screenHeight);
-		canvas.drawRect(auxRect, paint);
+		canvas.drawRect(auxRect, paint);*/
+	}
+
+	public void drawGameOver(Canvas canvas, Paint paintScore) {
+		paintScore.setTextSize((normalizedHeight*(float)Math.random())/8);
+		paintScore.setARGB(255, 0, (int)(255*Math.random()), 0);
+		canvas.drawText("GAME OVER", -screenWidth + screenWidth*(float)Math.random()*2, screenHeight*(float)Math.random(), paintScore);
 	}
 
 	public Rect getNormalizedRect(int x1, int y1, int x2, int y2){

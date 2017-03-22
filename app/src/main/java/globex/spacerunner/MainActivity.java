@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     public static int screenHeight;
     public static int normalizedWidth = 1080;
     public static int normalizedHeight = 1920;
+    public Button start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
 
-        Button start = (Button)findViewById(R.id.start);
+        start = (Button)findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,5 +60,20 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        //super.onBackPressed();
+        setContentView(R.layout.activity_main);
+
+        start = (Button)findViewById(R.id.start);
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.game_thread);
+            }
+        });
     }
 }

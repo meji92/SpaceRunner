@@ -1,5 +1,7 @@
 package globex.spacerunner;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Square {
@@ -34,10 +36,15 @@ public class Square {
         return (this.position.distance(a.getPosition()));
     }
 
-    public boolean collision (Square a){
+    public boolean isCollision(Square a){
         return (center.distance(a.getCenter())<(size/2+a.getSize()/2));
         //return ((Math.abs(center.getX()-a.getCenter().getX())<(size/2+a.getSize()/2))&&(Math.abs(center.getY()-a.getCenter().getY())<(size/2+a.getSize()/2)));
         //return (position.distance(a.getPosition())<=(a.getSize()+this.getSize()));
+    }
+    
+    public boolean collision (Square a){
+        this.size -= a.getSize();
+        return (this.size>0);
     }
 
     public void changeDir (){
